@@ -3,9 +3,9 @@
  require "../db.php";
 
  try {
- 	$conn = new PDO("mysql:host=$servername;dbname=$databasename", $username, $password);
+ 	$pdo = new PDO("mysql:host=$servername;dbname=$databasename", $username, $password);
   	// set the PDO error mode to exception
- 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+ 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   	// echo "Connected successfully";
 
 
@@ -14,22 +14,19 @@
     **************************************/
 
     // Create table messages
-  	$conn->exec("CREATE TABLE IF NOT EXISTS Material (
-     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-     name VARCHAR(30) NOT NULL UNIQUE,
-     type VARCHAR(30) NOT NULL,
-     appearance VARCHAR(30) NOT NULL,
-     water_reaction VARCHAR(30) NOT NULL,
-     ph VARCHAR(30) NOT NULL,
-     hcl_reaction VARCHAR(30) NOT NULL,
-     iodine_reaction VARCHAR(30) NOT NULL)");
+  	// $pdo->exec("CREATE TABLE IF NOT EXISTS Material (
+   //   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+   //   name VARCHAR(30) NOT NULL UNIQUE,
+   //   type VARCHAR(30) NOT NULL,
+   //   appearance VARCHAR(30) NOT NULL,
+   //   water_reaction VARCHAR(30) NOT NULL,
+   //   ph VARCHAR(30) NOT NULL,
+   //   hcl_reaction VARCHAR(30) NOT NULL,
+   //   iodine_reaction VARCHAR(30) NOT NULL)");
 
-    $conn->exec("CREATE TABLE IF NOT EXISTS State (
-      `id` int(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-      `code` char(2) NOT NULL UNIQUE,
-      `name` varchar(128) NOT NULL UNIQUE)");
 
-    $conn->exec("CREATE TABLE IF NOT EXISTS User (
+
+    $pdo->exec("CREATE TABLE IF NOT EXISTS User (
       id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
       first_name VARCHAR(64) NOT NULL,
       last_name VARCHAR(64) NOT NULL,
@@ -40,21 +37,40 @@
       app_permissions TINYINT NOT NULL DEFAULT 0,
       created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (state_code)
-        REFERENCES State(code)
+      REFERENCES State(code)
     )");
 
     
 
   	// SEED DATABASE
 
-    $conn->exec("INSERT INTO Material (name, type, appearance, water_reaction, ph, hcl_reaction, iodine_reaction)
-      VALUES ('Baking Soda', 'Solid', 'Powder', 'Soluble', '8', 'Bubbles form', 'No reaction');
-      INSERT INTO Material (name, type, appearance, water_reaction, ph, hcl_reaction, iodine_reaction)
-      VALUES ('Gypsum', 'Solid', 'Powder', 'Not Soluble', '>8', 'No reaction', 'No reaction');");
+    // $pdo->exec("INSERT INTO Material (name, type, appearance, water_reaction, ph, hcl_reaction, iodine_reaction)
+    //   VALUES ('Baking Soda', 'Solid', 'Powder', 'Soluble', '8', 'Bubbles form', 'No reaction');
+    //   INSERT INTO Material (name, type, appearance, water_reaction, ph, hcl_reaction, iodine_reaction)
+    //   VALUES ('Gypsum', 'Solid', 'Powder', 'Not Soluble', '>8', 'No reaction', 'No reaction');");
 
 
 
-    $conn->exec("INSERT INTO State (code,name) VALUES ('AL','Alabama');
+
+
+    // $pdo->exec("INSERT INTO User (first_name, last_name, email, state_code, app_permissions) 
+    //   VALUES ('Diego', 'Gomez', 'dgg2010@gmail.com', 'AZ', 5)");
+
+    importUnknowns($pdo);
+
+    $pdo = null;
+
+  } catch(PDOException $e) {
+   echo "Error: " . $e->getMessage();
+ }
+
+ function createStates($pdo) {
+  $pdo->exec("CREATE TABLE IF NOT EXISTS State (
+    `id` int(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `code` char(2) NOT NULL UNIQUE,
+    `name` varchar(128) NOT NULL UNIQUE)");
+
+  $pdo->exec("INSERT INTO State (code,name) VALUES ('AL','Alabama');
     INSERT INTO State (code,name) VALUES ('AK','Alaska');
     INSERT INTO State (code,name) VALUES ('AS','American Samoa');
     INSERT INTO State (code,name) VALUES ('AZ','Arizona');
@@ -113,13 +129,41 @@
     INSERT INTO State (code,name) VALUES ('WV','West Virginia');
     INSERT INTO State (code,name) VALUES ('WI','Wisconsin');
     INSERT INTO State (code,name) VALUES ('WY','Wyoming');");
+}
 
-    // $conn->exec("INSERT INTO User (first_name, last_name, email, state_code, app_permissions) 
-    //   VALUES ('Diego', 'Gomez', 'dgg2010@gmail.com', 'AZ', 5)");
 
-    $conn = null;
+function importUnknowns($pdo) {
 
-  } catch(PDOException $e) {
-   echo "Error: " . $e->getMessage();
- }
- ?> 
+    $pdo->exec("CREATE TABLE IF NOT EXISTS Unknown (
+     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+     category VARCHAR(30) NOT NULL,
+     name VARCHAR(30) NOT NULL UNIQUE,
+     type VARCHAR(30) NOT NULL,
+     appearance VARCHAR(30) NOT NULL,
+     ph VARCHAR(30) NOT NULL,
+     water_reaction VARCHAR(30) NOT NULL,
+     hcl_reaction VARCHAR(30) NOT NULL,
+     iodine_reaction VARCHAR(30) NOT NULL,
+     other_observation VARCHAR(30),
+     odor VARCHAR(30),
+     apply_magnet VARCHAR(30),
+     microscope_view VARCHAR(30),
+     apply_flame VARCHAR(30),
+     buoyancy_water VARCHAR(30),
+     buoyancy_IPA VARCHAR(30),
+     buoyancy_vegetable_oil VARCHAR(30),
+     buoyancy_nacl VARCHAR(30),
+     buoyancy_saturated_nacl VARCHAR(30)
+   )");
+
+  $csv = array_map('str_getcsv', file('Matrix of Unknowns.csv'));
+
+  foreach($csv as $unknown) {
+    echo json_encode($unknown);
+  }
+
+
+  // fclose($file);
+}
+
+?> 

@@ -9,11 +9,11 @@
 							<h2 class="title is-3" v-text="title"></h2>
 							<span class="subtitle is-4" v-text="subtitle"></span>
 
-							<choose-unknowns v-if="step === 1" v-on:emitUpMaterials="updateUnknowns" :chosen="chosenUnknowns"></choose-unknowns>
+							<choose-unknowns v-on:emitUpMaterials="updateUnknowns" :chosen="chosenUnknowns"></choose-unknowns>
 
-							<write-case-file v-if="step === 2" v-on:emitPrev="changeStep" v-on:emitUpCase="updateCase" :name="caseName" :story="caseStory"></write-case-file>
+							<write-case-file v-on:emitPrev="changeStep" v-on:emitUpCase="updateCase" :name="caseName" :story="caseStory"></write-case-file>
 
-							<define-suspects v-if="step === 3" v-on:emitPrev="changeStep" v-on:emitUpSuspect="updateSuspect" :suspectList="suspects"></define-suspects>
+							<define-suspects v-on:emitPrev="changeStep" v-on:emitUpSuspect="updateSuspect" :suspectList="suspects"></define-suspects>
 						</div>
 					</div>
 				</section>
