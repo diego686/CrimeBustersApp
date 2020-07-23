@@ -1,0 +1,5 @@
+@use "./node_modules/bulma/bulma.sass";
+
+.field.is-grouped.next-buttons {
+	justify-content: space-between;
+}
