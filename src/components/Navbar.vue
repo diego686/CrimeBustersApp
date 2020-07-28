@@ -17,11 +17,8 @@
 
 		<div id="navbarBasicExample" class="navbar-menu">
 			<div class="navbar-start">
-				<a class="navbar-item">
-					Home
-				</a>
 
-				<a class="navbar-item">
+				<!-- <a class="navbar-item">
 					Documentation
 				</a>
 
@@ -45,7 +42,7 @@
 							Report an issue
 						</a>
 					</div>
-				</div>
+				</div> -->
 			</div>
 
 			<div class="navbar-end">
