@@ -54,8 +54,12 @@
 
     // importUnknowns($pdo);
 
-    createShoes($pdo);
-    createFootprints($pdo);
+    // createShoes($pdo);
+    // createFootprints($pdo);
+
+    // createDNA($pdo);
+
+    createFingerprints($pdo);
 
     $pdo = null;
 
@@ -63,13 +67,58 @@
    echo "Error: " . $e->getMessage();
  }
 
- function createShoes($pdo) {
+ function createFingerprints($pdo) {
+  $pdo->exec("CREATE TABLE IF NOT EXISTS Fingerprint (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    image_path VARCHAR(64) NOT NULL UNIQUE)");
+
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint1.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint2.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint3.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint4.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint5.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint6.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint7.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint8.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint9.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint10.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint11.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint12.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint13.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint14.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint15.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint16.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint17.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint18.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint19.png')");
+  $pdo->exec("INSERT INTO Fingerprint (image_path) VALUES ('images/fingerprints/Fingerprint20.png')");
+}
+
+function createDNA($pdo) {
+  $pdo->exec("CREATE TABLE IF NOT EXISTS dna (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    image_path VARCHAR(64) NOT NULL UNIQUE)");
+
+  $pdo->exec("INSERT INTO dna (image_path) VALUES ('images/dna/dna1.png')");
+  $pdo->exec("INSERT INTO dna (image_path) VALUES ('images/dna/dna2.png')");
+  $pdo->exec("INSERT INTO dna (image_path) VALUES ('images/dna/dna3.png')");
+  $pdo->exec("INSERT INTO dna (image_path) VALUES ('images/dna/dna4.png')");
+  $pdo->exec("INSERT INTO dna (image_path) VALUES ('images/dna/dna5.png')");
+  $pdo->exec("INSERT INTO dna (image_path) VALUES ('images/dna/dna6.png')");
+}
+
+function createShoes($pdo) {
   $pdo->exec("CREATE TABLE IF NOT EXISTS Shoe (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     image_path VARCHAR(64) NOT NULL UNIQUE)");
 
   $pdo->exec("INSERT INTO Shoe (image_path) VALUES ('images/shoes/1/Shoe1.jpg')");
   $pdo->exec("INSERT INTO Shoe (image_path) VALUES ('images/shoes/2/Shoe1.jpg')");
+  $pdo->exec("INSERT INTO Shoe (image_path) VALUES ('images/shoes/3/Shoe1.jpg')");
+  $pdo->exec("INSERT INTO Shoe (image_path) VALUES ('images/shoes/4/Shoe1.jpg')");
+  $pdo->exec("INSERT INTO Shoe (image_path) VALUES ('images/shoes/5/Shoe1.jpg')");
+  $pdo->exec("INSERT INTO Shoe (image_path) VALUES ('images/shoes/6/Shoe1.jpg')");
+  $pdo->exec("INSERT INTO Shoe (image_path) VALUES ('images/shoes/7/Shoe1.jpg')");
 }
 
 function createFootprints($pdo) {
@@ -84,6 +133,11 @@ function createFootprints($pdo) {
 
   $pdo->exec("INSERT INTO Footprint (shoe_id, image_path) VALUES (1, 'images/shoes/1/Footprint1.jpg')");
   $pdo->exec("INSERT INTO Footprint (shoe_id, image_path) VALUES (2, 'images/shoes/2/Footprint1.jpg')");
+  $pdo->exec("INSERT INTO Footprint (shoe_id, image_path) VALUES (3, 'images/shoes/3/Footprint1.jpg')");
+  $pdo->exec("INSERT INTO Footprint (shoe_id, image_path) VALUES (4, 'images/shoes/4/Footprint1.jpg')");
+  $pdo->exec("INSERT INTO Footprint (shoe_id, image_path) VALUES (5, 'images/shoes/5/Footprint1.jpg')");
+  $pdo->exec("INSERT INTO Footprint (shoe_id, image_path) VALUES (6, 'images/shoes/6/Footprint1.jpg')");
+  $pdo->exec("INSERT INTO Footprint (shoe_id, image_path) VALUES (7, 'images/shoes/7/Footprint1.jpg')");
 }
 
 function createStates($pdo) {
