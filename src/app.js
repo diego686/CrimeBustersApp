@@ -9,7 +9,7 @@ import Home from './components/Home';
 import Register from './components/login/Register';
 import Login from './components/login/Login';
 import EventSupervisorView from './components/EventSupervisorView';
-import CreateTest from './components/CreateTest';
+import CreateTest from './components/create_test/CreateTest';
 
 
 import {BASE_URL} from './global.js';

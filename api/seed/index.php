@@ -44,10 +44,6 @@
 
   	// SEED DATABASE
 
-    // $pdo->exec("INSERT INTO Material (name, type, appearance, water_reaction, ph, hcl_reaction, iodine_reaction)
-    //   VALUES ('Baking Soda', 'Solid', 'Powder', 'Soluble', '8', 'Bubbles form', 'No reaction');
-    //   INSERT INTO Material (name, type, appearance, water_reaction, ph, hcl_reaction, iodine_reaction)
-    //   VALUES ('Gypsum', 'Solid', 'Powder', 'Not Soluble', '>8', 'No reaction', 'No reaction');");
 
 
 
@@ -56,7 +52,10 @@
     // $pdo->exec("INSERT INTO User (first_name, last_name, email, state_code, app_permissions) 
     //   VALUES ('Diego', 'Gomez', 'dgg2010@gmail.com', 'AZ', 5)");
 
-    importUnknowns($pdo);
+    // importUnknowns($pdo);
+
+    createShoes($pdo);
+    createFootprints($pdo);
 
     $pdo = null;
 
@@ -64,7 +63,30 @@
    echo "Error: " . $e->getMessage();
  }
 
- function createStates($pdo) {
+ function createShoes($pdo) {
+  $pdo->exec("CREATE TABLE IF NOT EXISTS Shoe (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    image_path VARCHAR(64) NOT NULL UNIQUE)");
+
+  $pdo->exec("INSERT INTO Shoe (image_path) VALUES ('images/shoes/1/Shoe1.jpg')");
+  $pdo->exec("INSERT INTO Shoe (image_path) VALUES ('images/shoes/2/Shoe1.jpg')");
+}
+
+function createFootprints($pdo) {
+  $pdo->exec("CREATE TABLE IF NOT EXISTS Footprint (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    shoe_id INT(6) UNSIGNED, 
+    image_path VARCHAR(64) NOT NULL UNIQUE,
+    FOREIGN KEY (shoe_id)
+    REFERENCES Shoe(id)
+    ON DELETE CASCADE
+  )");
+
+  $pdo->exec("INSERT INTO Footprint (shoe_id, image_path) VALUES (1, 'images/shoes/1/Footprint1.jpg')");
+  $pdo->exec("INSERT INTO Footprint (shoe_id, image_path) VALUES (2, 'images/shoes/2/Footprint1.jpg')");
+}
+
+function createStates($pdo) {
   $pdo->exec("CREATE TABLE IF NOT EXISTS State (
     `id` int(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `code` char(2) NOT NULL UNIQUE,
@@ -134,32 +156,67 @@
 
 function importUnknowns($pdo) {
 
-    $pdo->exec("CREATE TABLE IF NOT EXISTS Unknown (
-     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-     category VARCHAR(30) NOT NULL,
-     name VARCHAR(30) NOT NULL UNIQUE,
-     type VARCHAR(30) NOT NULL,
-     appearance VARCHAR(30) NOT NULL,
-     ph VARCHAR(30) NOT NULL,
-     water_reaction VARCHAR(30) NOT NULL,
-     hcl_reaction VARCHAR(30) NOT NULL,
-     iodine_reaction VARCHAR(30) NOT NULL,
-     other_observation VARCHAR(30),
-     odor VARCHAR(30),
-     apply_magnet VARCHAR(30),
-     microscope_view VARCHAR(30),
-     apply_flame VARCHAR(30),
-     buoyancy_water VARCHAR(30),
-     buoyancy_IPA VARCHAR(30),
-     buoyancy_vegetable_oil VARCHAR(30),
-     buoyancy_nacl VARCHAR(30),
-     buoyancy_saturated_nacl VARCHAR(30)
-   )");
+  $pdo->exec("CREATE TABLE IF NOT EXISTS Unknown (
+   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+   category VARCHAR(30) NOT NULL,
+   name VARCHAR(30) NOT NULL UNIQUE,
+   type VARCHAR(30) NOT NULL,
+   appearance VARCHAR(64) NOT NULL,
+   ph VARCHAR(30) NOT NULL,
+   water_reaction VARCHAR(30) NOT NULL,
+   hcl_reaction VARCHAR(30) NOT NULL,
+   iodine_reaction VARCHAR(30) NOT NULL,
+   other_observation VARCHAR(64),
+   odor VARCHAR(30),
+   apply_magnet VARCHAR(30),
+   microscope_view VARCHAR(30),
+   apply_flame VARCHAR(30),
+   buoyancy_water VARCHAR(30),
+   buoyancy_IPA VARCHAR(30),
+   buoyancy_vegetable_oil VARCHAR(30),
+   buoyancy_nacl VARCHAR(30),
+   buoyancy_saturated_nacl VARCHAR(30)
+ )");
 
   $csv = array_map('str_getcsv', file('Matrix of Unknowns.csv'));
+  $skip_first = true;
 
   foreach($csv as $unknown) {
-    echo json_encode($unknown);
+    // echo json_encode($unknown);
+
+
+    $sql = "INSERT INTO Unknown (category, name, type, appearance, ph, water_reaction, hcl_reaction, iodine_reaction, other_observation, odor, apply_magnet, microscope_view, apply_flame, buoyancy_water, buoyancy_IPA, buoyancy_vegetable_oil, buoyancy_nacl, buoyancy_saturated_nacl) 
+    VALUES (:category, :name, :type, :appearance, :ph, :water_reaction, :hcl_reaction, :iodine_reaction, :other_observation, :odor, :apply_magnet, :microscope_view, :apply_flame, :buoyancy_water, :buoyancy_IPA, :buoyancy_vegetable_oil, :buoyancy_nacl, :buoyancy_saturated_nacl)";
+
+    $stmt = $pdo->prepare($sql);
+
+    // Bind parameters to statement variables
+    $stmt->bindParam(':category', $unknown[0]);
+    $stmt->bindParam(':name', $unknown[1]);
+    $stmt->bindParam(':type', $unknown[2]);
+    $stmt->bindParam(':appearance', $unknown[3]);
+    $stmt->bindParam(':ph', $unknown[4]);
+    $stmt->bindParam(':water_reaction', $unknown[5]);
+    $stmt->bindParam(':hcl_reaction', $unknown[6]);
+    $stmt->bindParam(':iodine_reaction', $unknown[7]);
+    $stmt->bindParam(':other_observation', $unknown[8]);
+    $stmt->bindParam(':odor', $unknown[9]);
+    $stmt->bindParam(':apply_magnet', $unknown[10]);
+    $stmt->bindParam(':microscope_view', $unknown[11]);
+    $stmt->bindParam(':apply_flame', $unknown[12]);
+    $stmt->bindParam(':buoyancy_water', $unknown[13]);
+    $stmt->bindParam(':buoyancy_IPA', $unknown[14]);
+    $stmt->bindParam(':buoyancy_vegetable_oil', $unknown[15]);
+    $stmt->bindParam(':buoyancy_nacl', $unknown[16]);
+    $stmt->bindParam(':buoyancy_saturated_nacl', $unknown[17]);
+
+
+    if ($skip_first) {
+      $skip_first = false;
+    } else {
+      $stmt->execute();
+    }
+    
   }
 
 
